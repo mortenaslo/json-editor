@@ -436,7 +436,7 @@ export class SchemaLoader {
         const response = await new Promise(resolve => {
           const r = new XMLHttpRequest()
           if (this.options.ajaxCredentials) r.withCredentials = this.options.ajaxCredentials          
-          r.overrideMimeType(options.ajaxMimeType || 'application/json');
+          r.overrideMimeType(this.options.ajaxMimeType || 'application/json');
           
           // If a function for manipulating the request before opening is provided, call it
           if (typeof this.options.ajaxPreOpen === 'function') {
