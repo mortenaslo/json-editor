@@ -435,16 +435,37 @@ export class SchemaLoader {
       if (!externalSchema) {
         const response = await new Promise(resolve => {
           const r = new XMLHttpRequest()
-          if (this.options.ajaxCredentials) r.withCredentials = this.options.ajaxCredentials
-          r.overrideMimeType('application/json')
-          r.open('GET', url, true)
+          if (this.options.ajaxCredentials) r.withCredentials = this.options.ajaxCredentials          
+          r.overrideMimeType(options.ajaxMimeType || 'application/json');
+          
+          // If a function for manipulating the request before opening is provided, call it
+          if (typeof this.options.ajaxPreOpen === 'function') {
+            this.options.ajaxPreOpen(r);
+          }
+          
+          r.open(this.options.ajaxMethod || 'GET', url, true)
+          
+          // If a function for manipulating the request before sending is provided, call it
+          if (typeof this.options.ajaxPreSend === 'function') {
+            this.options.ajaxPreSend(r);
+          }
+
           r.onload = () => {
             resolve(r)
           }
           r.onerror = (e) => {
             resolve(undefined)
           }
-          r.send()
+
+          let body = null;
+          // If a function for manipulating the request before sending is provided, call it
+          if (typeof this.options.ajaxBody === 'function') {
+            body = this.options.ajaxBody(r);
+          } else if (this.options.ajaxBody) {
+            body = this.options.ajaxBody;
+          }
+
+          r.send(body)
         })
         if (typeof response === 'undefined') throw new Error(`Failed to fetch ref via ajax - ${uri}`)
         try {
