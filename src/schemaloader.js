@@ -435,19 +435,19 @@ export class SchemaLoader {
       if (!externalSchema) {
         const response = await new Promise(resolve => {
           const r = new XMLHttpRequest()
-          if (this.options.ajaxCredentials) r.withCredentials = this.options.ajaxCredentials          
-          r.overrideMimeType(this.options.ajaxMimeType || 'application/json');
-          
+          if (this.options.ajaxCredentials) r.withCredentials = this.options.ajaxCredentials
+          r.overrideMimeType(this.options.ajaxMimeType || 'application/json')
+
           // If a function for manipulating the request before opening is provided, call it
           if (typeof this.options.ajaxPreOpen === 'function') {
-            this.options.ajaxPreOpen(r);
+            this.options.ajaxPreOpen(r)
           }
-          
+
           r.open(this.options.ajaxMethod || 'GET', url, true)
-          
+
           // If a function for manipulating the request before sending is provided, call it
           if (typeof this.options.ajaxPreSend === 'function') {
-            this.options.ajaxPreSend(r);
+            this.options.ajaxPreSend(r)
           }
 
           r.onload = () => {
@@ -457,12 +457,12 @@ export class SchemaLoader {
             resolve(undefined)
           }
 
-          let body = null;
+          let body = null
           // If a function for manipulating the request before sending is provided, call it
           if (typeof this.options.ajaxBody === 'function') {
-            body = this.options.ajaxBody(r);
+            body = this.options.ajaxBody(r)
           } else if (this.options.ajaxBody) {
-            body = this.options.ajaxBody;
+            body = this.options.ajaxBody
           }
 
           r.send(body)
